@@ -1,0 +1,56 @@
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "configure_make")
+load("@rules_license//rules:license.bzl", "license")
+
+package(
+    default_visibility = ["//visibility:public"],
+    default_applicable_licenses = [":license"],
+)
+
+exports_files([
+    "LICENSE",
+])
+
+license(
+    name = "license",
+    license_kinds = ["@rules_license//licenses/spdx:BSD-3-Clause"],
+    license_text = "LICENSE",
+)
+
+filegroup(
+  name = "all_srcs",
+  srcs = glob(
+      include = ["**"],
+      exclude = ["*.bazel"],
+  ),
+)
+
+config_setting(
+    name = "android-arm64",
+    constraint_values = [
+        "@platforms//cpu:arm64",
+        "@platforms//os:android",
+    ],
+)
+
+config_setting(
+    name = "android-arm7",
+    constraint_values = [
+        "@platforms//cpu:armv7",
+        "@platforms//os:android",
+    ],
+)
+
+configure_make(
+  name = "libbacktrace",
+  lib_source = ":all_srcs",
+  configure_options = select({
+      ":android-arm64": [
+          "--host=aarch64-linux-androideabi",
+      ],
+      ":android-arm7": [
+          "--host=armv7a-linux-androideabi",
+      ],
+      "//conditions:default": [],
+  })
+)
+
