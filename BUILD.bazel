@@ -1,4 +1,4 @@
-load("@rules_foreign_cc//foreign_cc:defs.bzl", "configure_make")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("@rules_license//rules:license.bzl", "license")
 
 package(
@@ -16,63 +16,37 @@ license(
     license_text = "LICENSE",
 )
 
-filegroup(
-  name = "all_srcs",
-  srcs = glob(
-      include = ["**"],
-      exclude = ["*.bazel"],
-  ),
-)
-
-config_setting(
-    name = "android-arm64",
-    constraint_values = [
-        "@platforms//cpu:arm64",
-        "@platforms//os:android",
-    ],
-)
-
-config_setting(
-    name = "android-arm7",
-    constraint_values = [
-        "@platforms//cpu:armv7",
-        "@platforms//os:android",
-    ],
-)
-
-config_setting(
-    name = "android-x86",
-    constraint_values = [
-        "@platforms//cpu:x86_32",
-        "@platforms//os:android",
-    ],
-)
-
-config_setting(
-    name = "android-x86_64",
-    constraint_values = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:android",
-    ],
-)
-
-configure_make(
+cc_library(
     name = "libbacktrace",
-    lib_source = ":all_srcs",
-    configure_options = select({
-        ":android-arm64": [
-            "--host=aarch64-linux-androideabi",
-        ],
-        ":android-arm7": [
-            "--host=armv7a-linux-androideabi",
-        ],
-        ":android-x86": [
-            "--host=i686-linux-android",
-        ],
-        ":android-x86_64": [
-            "--host=x86_64-linux-android",
-        ],
-        "//conditions:default": [],
-    })
+    srcs = [
+        "backtrace.h",
+        "atomic.c",
+        "dwarf.c",
+        "fileline.c",
+        "internal.h",
+        "posix.c",
+        "print.c",
+        "sort.c",
+        "state.c",
+        "config.h",
+        "backtrace.c",
+        "simple.c",
+        "nounwind.c",
+        "elf.c",
+        "macho.c",
+        "pecoff.c",
+        "unknown.c",
+        "read.c",
+        "mmapio.c",
+        "alloc.c",
+        "mmap.c",
+        "filenames.h",
+        "backtrace-supported.h",
+    ],
+    hdrs = [
+        "backtrace.h",
+    ],
+    includes = ["."],
+    visibility = ["//visibility:public"],
 )
 
