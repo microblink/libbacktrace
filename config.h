@@ -7,15 +7,17 @@
 
 #if UINTPTR_MAX == 0xffffffff
 #define BACKTRACE_ELF_SIZE 32
+#ifdef __i386__
+#define HAVE_ATOMIC_FUNCTIONS 1
+#define HAVE_SYNC_FUNCTIONS 1
+#endif
 #else
 #if UINTPTR_MAX != 0xffffffffffffffffULL
 #error bad elf word size!?
 #endif
 #define BACKTRACE_ELF_SIZE 64
-#ifdef __ANDROID__
 #define HAVE_ATOMIC_FUNCTIONS 1
 #define HAVE_SYNC_FUNCTIONS 1
-#endif
 #endif
 
 #if defined __ELF__
@@ -59,4 +61,6 @@
 #define HAVE_SYS_STAT_H 1
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_UNISTD_H 1
+
+
 
