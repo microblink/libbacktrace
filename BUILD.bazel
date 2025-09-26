@@ -17,7 +17,7 @@ license(
 )
 
 cc_library(
-    name = "libbacktrace",
+    name = "backtrace",
     srcs = [
         "backtrace.h",
         "atomic.c",
@@ -46,7 +46,13 @@ cc_library(
     hdrs = [
         "backtrace.h",
     ],
+    linkstatic = 1,
     includes = ["."],
     visibility = ["//visibility:public"],
 )
 
+alias(
+    name = "libbacktrace",
+    actual = ":backtrace",
+    visibility = ["//visibility:public"],
+)
