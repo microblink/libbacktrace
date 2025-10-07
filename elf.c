@@ -639,6 +639,11 @@ elf_initialize_syminfo (struct backtrace_state *state,
 			backtrace_error_callback error_callback,
 			void *data, struct elf_syminfo_data *sdata,
 			struct elf_ppc64_opd_data *opd)
+#if defined(__has_feature)
+#if __has_feature(undefined_behavior_sanitizer)
+__attribute__((no_sanitize("alignment")))
+#endif
+#endif
 {
   size_t sym_count;
   const b_elf_sym *sym;
